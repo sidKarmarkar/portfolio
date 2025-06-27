@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siddharth H. Karmarkar | Quantitative Researcher & ML Engineer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- ScrollReveal.js for animations -->
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <style>
+        :root {
+            --bg-color: #f8fafc; /* slate-50 */
+            --text-primary: #1e293b; /* slate-800 */
+            --text-secondary: #475569; /* slate-600 */
+            --card-bg: #ffffff;
+            --primary-blue: #2563eb;
+            --primary-blue-hover: #1d4ed8;
+            --border-color: #e2e8f0; /* slate-200 */
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+        }
+        .animated-gradient {
+            background: linear-gradient(-45deg, #e0e7ff, #c7d2fe, #a5b4fc, #6366f1);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .section-title { color: var(--text-primary); }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            visibility: hidden; /* For ScrollReveal */
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .timeline::before {
+            content: ''; position: absolute; left: 1rem; top: 1.5rem; bottom: 0;
+            width: 3px; background-color: #d1d5db; border-radius: 1.5px;
+        }
+        .timeline-item .timeline-dot {
+            content: ''; position: absolute; left: 1rem; top: 1.5rem;
+            width: 1.25rem; height: 1.25rem; border-radius: 9999px;
+            background-color: var(--primary-blue); border: 4px solid var(--bg-color);
+            transform: translateX(-50%); z-index: 10;
+        }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000; opacity: 0; visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.visible { opacity: 1; visibility: visible; }
+        .modal-container {
+            background: white; padding: 1rem; border-radius: 0.75rem;
+            width: 90%; max-width: 600px; max-height: 90vh;
+            overflow-y: auto; transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        .modal-photo-container {
+             max-width: 90vw; max-height: 90vh;
+        }
+        .modal-photo-container img {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 0.5rem;
+        }
+        .modal-overlay.visible .modal-container { transform: scale(1); }
+        .loader {
+            border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-blue);
+            border-radius: 50%; width: 40px; height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .ai-button { background-color: var(--primary-blue); }
+        .ai-button:hover { background-color: var(--primary-blue-hover); }
+        .gallery-item { cursor: pointer; overflow: hidden; border-radius: 0.5rem; aspect-ratio: 1/1; }
+        .gallery-item img { transition: transform 0.3s ease; width: 100%; height: 100%; object-fit: cover; }
+        .gallery-item:hover img { transform: scale(1.05); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold text-slate-800"><a href="#">Siddharth H. Karmarkar</a></div>
+            <div class="hidden md:flex space-x-6 text-base font-medium">
+                <a href="#about" class="text-slate-600 hover:text-primary-blue transition">About</a>
+                <a href="#experience" class="text-slate-600 hover:text-primary-blue transition">Experience</a>
+                <a href="#projects" class="text-slate-600 hover:text-primary-blue transition">Projects</a>
+                <a href="#skills" class="text-slate-600 hover:text-primary-blue transition">Skills</a>
+                <a href="#photography" class="text-slate-600 hover:text-primary-blue transition">Photography</a>
+                <button id="nav-contact-btn" class="bg-primary-blue text-white px-4 py-2 rounded-lg hover:bg-primary-blue-hover transition">Contact</button>
+            </div>
+            <div class="md:hidden"><button id="menu-btn" class="text-slate-600 focus:outline-none"><i class="fas fa-bars fa-lg"></i></button></div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="#about" class="block px-6 py-3 text-slate-600 hover:bg-slate-100">About</a>
+            <a href="#experience" class="block px-6 py-3 text-slate-600 hover:bg-slate-100">Experience</a>
+            <a href="#projects" class="block px-6 py-3 text-slate-600 hover:bg-slate-100">Projects</a>
+            <a href="#skills" class="block px-6 py-3 text-slate-600 hover:bg-slate-100">Skills</a>
+            <a href="#photography" class="block px-6 py-3 text-slate-600 hover:bg-slate-100">Photography</a>
+            <button id="mobile-nav-contact-btn" class="w-full text-left block px-6 py-3 text-slate-600 hover:bg-slate-100">Contact</button>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6">
+        <!-- Hero Section -->
+        <section id="about" class="py-20 md:py-28">
+            <div class="grid md:grid-cols-3 gap-12 items-center">
+                <div class="md:col-span-2">
+                    <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 mb-4">Quantitative Analysis Meets Machine Learning</h1>
+                    <p class="text-lg md:text-xl text-slate-600 mb-8 max-w-2xl">
+                        As a Master's candidate at Columbia University specializing in AI/ML, my passion lies in integrating sophisticated mathematical models with machine learning to develop robust financial strategies. My journey is anchored in a strong foundation of data analytics and hands-on experience in both tech and finance, driving my goal to innovate within the quant space.
+                    </p>
+                    <div class="flex items-center space-x-6">
+                         <a href="https://www.linkedin.com/in/sidkarmarkar" target="_blank" class="text-slate-600 hover:text-primary-blue transition-transform duration-300 ease-in-out hover:scale-110 group flex items-center space-x-2">
+                            <i class="fab fa-linkedin text-4xl"></i>
+                            <span class="font-extrabold text-lg text-slate-800 group-hover:text-primary-blue">LinkedIn</span>
+                        </a>
+                        <a href="https://github.com/sidKarmarkar" target="_blank" class="text-slate-600 hover:text-primary-blue transition-transform duration-300 ease-in-out hover:scale-110 group flex items-center space-x-2">
+                            <i class="fab fa-github text-4xl"></i>
+                            <span class="font-extrabold text-lg text-slate-800 group-hover:text-primary-blue">GitHub</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="relative w-56 h-56 md:w-72 md:h-72 mx-auto md:mx-0">
+                    <div class="absolute inset-0 animated-gradient rounded-full opacity-50 blur-2xl"></div>
+                    <img src="https://storage.googleapis.com/gemini-prod-us-central1-cbf2/images/IMG_5868.jpg" alt="Siddharth Karmarkar" class="relative rounded-full border-4 border-white shadow-xl w-full h-full object-cover">
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="py-16">
+            <h2 class="text-4xl font-bold section-title mb-12 text-center">Professional Experience</h2>
+            <div class="relative timeline max-w-3xl mx-auto">
+                 <div class="timeline-item mb-12 pl-10">
+                    <div class="timeline-dot"></div>
+                    <div class="card p-6">
+                        <div class="card-content"><p class="text-sm font-medium text-slate-500">Mar 2025 - Present</p><h3 class="text-xl font-bold text-slate-800 mt-1">Quantitative Researcher Intern</h3><p class="text-lg font-medium text-slate-600 mb-4">PiTrading, New York, NY</p><ul class="list-disc list-inside space-y-2 text-slate-700"><li>Develop algorithmic portfolios mirroring trading behavior of U.S. Congressional members.</li><li>Build 10+ ML-driven thematic investment baskets using sentiment signals.</li></ul></div>
+                        <button class="ai-button mt-6 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition w-full">✨ Ask AI for Details</button>
+                    </div>
+                </div>
+                <div class="timeline-item mb-12 pl-10">
+                    <div class="timeline-dot"></div>
+                    <div class="card p-6">
+                        <div class="card-content"><p class="text-sm font-medium text-slate-500">Feb 2025 - Jun 2025</p><h3 class="text-xl font-bold text-slate-800 mt-1">Machine Learning and Software Lead</h3><p class="text-lg font-medium text-slate-600 mb-4">Stealth Startup, New York, NY</p><ul class="list-disc list-inside space-y-2 text-slate-700"><li>Led design of an AI-powered inventory system, improving efficiency by 40%.</li><li>Developed a CRM dashboard with LLMs, increasing retention by 30%.</li></ul></div>
+                        <button class="ai-button mt-6 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition w-full">✨ Ask AI for Details</button>
+                    </div>
+                </div>
+                <div class="timeline-item mb-12 pl-10">
+                    <div class="timeline-dot"></div>
+                    <div class="card p-6">
+                        <div class="card-content"><p class="text-sm font-medium text-slate-500">Jan 2024 - Jun 2024</p><h3 class="text-xl font-bold text-slate-800 mt-1">Machine Learning Intern</h3><p class="text-lg font-medium text-slate-600 mb-4">Emerson, Pune, India</p><ul class="list-disc list-inside space-y-2 text-slate-700"><li>Fine-tuned LLMs and helped pre-train a 6B parameter model.</li><li>Deployed an LLM assistant, cutting code delivery time by 66%.</li></ul></div>
+                        <button class="ai-button mt-6 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition w-full">✨ Ask AI for Details</button>
+                    </div>
+                </div>
+                 <div class="timeline-item pl-10">
+                    <div class="timeline-dot"></div>
+                    <div class="card p-6">
+                        <div class="card-content"><p class="text-sm font-medium text-slate-500">Jul 2023 - Dec 2023</p><h3 class="text-xl font-bold text-slate-800 mt-1">Software Intern</h3><p class="text-lg font-medium text-slate-600 mb-4">Infocenter</p><ul class="list-disc list-inside space-y-2 text-slate-700"><li>Utilized Generative AI to decrease issue resolution time by ~10%.</li><li>Optimized workflow management, boosting developer instance efficiency by ~25%.</li></ul></div>
+                        <button class="ai-button mt-6 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition w-full">✨ Ask AI for Details</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects and Research Section -->
+        <section id="projects" class="py-16">
+            <h2 class="text-4xl font-bold section-title mb-12 text-center">Research & Publications</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="card p-6 lg:col-span-1">
+                    <div class="card-content"><p class="text-sm font-medium text-slate-500">Columbia Business School</p><h3 class="text-xl font-bold text-slate-800 mt-1">Quantitative Research Intern</h3><ul class="list-disc list-inside space-y-2 text-slate-700 mt-4"><li>Researching Differential Machine Learning applications for Options Pricing.</li><li>Increased prediction accuracy >30% and reduced errors up to 92%.</li></ul></div>
+                    <button class="ai-button mt-6 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition w-full">✨ Ask AI for Details</button>
+                </div>
+                <div class="card p-6 lg:col-span-1">
+                    <div class="card-content"><p class="text-sm font-medium text-slate-500">Columbia University</p><h3 class="text-xl font-bold text-slate-800 mt-1">Research Assistant</h3><ul class="list-disc list-inside space-y-2 text-slate-700 mt-4"><li>Using LLMs to automate privacy policy analysis and classification.</li><li>Benchmarked top models like GPT-4, achieving 99% accuracy.</li></ul></div>
+                    <button class="ai-button mt-6 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition w-full">✨ Ask AI for Details</button>
+                </div>
+                <div class="card p-6 lg:col-span-1">
+                     <div class="card-content"><p class="text-sm font-medium text-slate-500">IEEE Publication</p><h3 class="text-xl font-bold text-slate-800 mt-1">Published Research Paper</h3><ul class="list-disc list-inside space-y-2 text-slate-700 mt-4"><li>Co-authored a paper on optimizing wireless charging for EVs.</li><li>Accepted and published via the iPACT conference.</li></ul></div>
+                    <button class="ai-button mt-6 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition w-full">✨ Ask AI for Details</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Skills Section -->
+        <section id="skills" class="py-16">
+            <h2 class="text-4xl font-bold section-title mb-12 text-center">Technical Skills</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
+                <div class="card p-6 text-center"><i class="fas fa-brain text-4xl text-primary-blue mb-4"></i><h3 class="text-lg font-bold">AI/ML</h3><p class="text-sm text-slate-500">TensorFlow, Scikit-learn, Hugging Face, GenAI, LLMs, NLP, DML</p></div>
+                <div class="card p-6 text-center"><i class="fas fa-code text-4xl text-primary-blue mb-4"></i><h3 class="text-lg font-bold">Languages</h3><p class="text-sm text-slate-500">Python, SQL, C++, R, Verilog HDL</p></div>
+                <div class="card p-6 text-center"><i class="fas fa-cloud text-4xl text-primary-blue mb-4"></i><h3 class="text-lg font-bold">Cloud & DB</h3><p class="text-sm text-slate-500">AWS, GCP, Firebase, MySQL, Pinecone, DynamoDB</p></div>
+                <div class="card p-6 text-center"><i class="fas fa-calculator text-4xl text-primary-blue mb-4"></i><h3 class="text-lg font-bold">Quant</h3><p class="text-sm text-slate-500">Quantlib, PyAlgotrade, Time Series, Monte Carlo</p></div>
+            </div>
+        </section>
+
+        <!-- Certs and Awards -->
+        <section id="certs" class="py-16">
+             <h2 class="text-4xl font-bold section-title mb-12 text-center">Certifications & Awards</h2>
+             <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                 <div class="card p-6">
+                     <h3 class="text-xl font-bold mb-4 flex items-center"><i class="fas fa-award text-amber-500 mr-3"></i>Honors & Awards</h3>
+                     <ul class="list-disc list-inside text-slate-600 space-y-2">
+                        <li>Dr. Homi Bhabha Balvaidnyanik Competition Silver Medal</li>
+                        <li>Scholarship for Higher Education (SHE)</li>
+                        <li>11th rank in Maharashtra State Scholarship</li>
+                     </ul>
+                 </div>
+                  <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4 flex items-center"><i class="fas fa-certificate text-primary-blue mr-3"></i>Certifications</h3>
+                    <ul class="list-disc list-inside text-slate-600 space-y-2">
+                        <li>CFA Level 1 Candidate (Nov 2025)</li>
+                        <li>Neural Networks and Deep Learning</li>
+                        <li>Supervised Machine Learning: Regression and Classification</li>
+                        <li>Akuna Capital Options 201</li>
+                     </ul>
+                </div>
+             </div>
+        </section>
+        
+        <!-- Photography Section -->
+        <section id="photography" class="py-16">
+            <div class="text-center">
+                <h2 class="text-4xl font-bold section-title mb-4">A Different Lens</h2>
+                <p class="text-lg text-slate-600 max-w-2xl mx-auto mb-12">Beyond algorithms and analysis, I find balance and inspiration in the natural world. Photography is my way of connecting with the wild, capturing fleeting moments of beauty, and telling stories without words.</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-7xl mx-auto">
+                <div class="gallery-item group card"><img src="https://storage.googleapis.com/gemini-prod-us-central1-cbf2/images/2%203.jpg" alt="A hawk standing in shallow water, looking over its shoulder." ></div>
+                <div class="gallery-item group card"><img src="https://storage.googleapis.com/gemini-prod-us-central1-cbf2/images/IMG_0299.jpg" alt="A colorful sunbird with a blue throat perched on a branch." ></div>
+                <div class="gallery-item group card"><img src="https://storage.googleapis.com/gemini-prod-us-central1-cbf2/images/IMG_3624.jpg" alt="The silhouette of a bird with a fish in its beak against a golden sunset." ></div>
+                <div class="gallery-item group card"><img src="https://storage.googleapis.com/gemini-prod-us-central1-cbf2/images/IMG_8030.jpg" alt="Two owls perched on a rock, looking at the camera." ></div>
+                <div class="gallery-item group card"><img src="https://storage.googleapis.com/gemini-prod-us-central1-cbf2/images/2%202.jpg" alt="A serpent eagle perched on a tree branch among green leaves." ></div>
+                <div class="gallery-item group card"><img src="https://storage.googleapis.com/gemini-prod-us-central1-cbf2/images/IMG_6984.jpg" alt="A small falcon with orange and grey feathers standing on a rock." ></div>
+                <div class="gallery-item group card"><img src="https://storage.googleapis.com/gemini-prod-us-central1-cbf2/images/3%202.jpg" alt="A falcon in flight over a field of purple flowers." ></div>
+                <div class="gallery-item group card"><img src="https://storage.googleapis.com/gemini-prod-us-central1-cbf2/images/2.jpg" alt="A white tern flying against a dark background, illuminated by sunlight." ></div>
+            </div>
+        </section>
+
+        <!-- Contact Section in Footer -->
+        <section id="contact" class="py-24 animated-gradient rounded-xl my-16">
+            <div class="text-center">
+                <h2 class="text-4xl font-extrabold text-white mb-4">Let's Build the Future of Finance.</h2>
+                <p class="text-lg text-indigo-100 max-w-2xl mx-auto mb-8">I'm actively seeking new opportunities and collaborations. If you're looking for a passionate and skilled quantitative developer, let's talk.</p>
+                <button id="footer-contact-btn" class="bg-white text-primary-blue font-bold py-3 px-8 rounded-lg hover:bg-slate-100 transition shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-lg">Contact Me</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400 py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 Siddharth H. Karmarkar. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div id="ai-modal" class="modal-overlay"><div class="modal-container"><div class="flex justify-between items-center mb-4"><h2 id="modal-title" class="text-2xl font-bold text-slate-800">Details</h2><button class="close-modal-btn text-2xl font-bold text-slate-500 hover:text-slate-800">&times;</button></div><div id="modal-content" class="text-slate-700 space-y-4"></div></div></div>
+    <div id="photo-modal" class="modal-overlay"><div class="modal-photo-container relative"><img id="photo-modal-img" src="" alt="Enlarged wildlife photo"><button class="close-modal-btn absolute -top-2 -right-2 text-white bg-black/50 rounded-full h-8 w-8 flex items-center justify-center text-2xl">&times;</button></div></div>
+    <!-- Contact Modal -->
+    <div id="contact-modal" class="modal-overlay">
+        <div class="modal-container p-8 text-center">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-slate-800">Get In Touch</h2>
+                <button class="close-modal-btn text-3xl font-light text-slate-500 hover:text-slate-800">&times;</button>
+            </div>
+            <div class="space-y-6">
+                <a href="mailto:siddharth.karmarkar@columbia.edu" class="block w-full bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold p-4 rounded-lg transition text-left group">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm">Email</p>
+                            <p class="text-lg">siddharth.karmarkar@columbia.edu</p>
+                        </div>
+                        <i class="fas fa-envelope text-2xl text-blue-500 group-hover:scale-110 transition-transform"></i>
+                    </div>
+                </a>
+                 <a href="tel:+16462218975" class="block w-full bg-green-50 hover:bg-green-100 text-green-700 font-semibold p-4 rounded-lg transition text-left group">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm">Phone</p>
+                            <p class="text-lg">+1 646 221 8975</p>
+                        </div>
+                        <i class="fas fa-phone text-2xl text-green-500 group-hover:scale-110 transition-transform"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // --- Navigation and Mobile Menu ---
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                 if (!mobileMenu.classList.contains('hidden')) { mobileMenu.classList.add('hidden'); }
+            });
+        });
+
+        // --- ScrollReveal Animations ---
+        ScrollReveal().reveal('.card', { delay: 200, duration: 800, origin: 'bottom', distance: '50px', interval: 100, reset: false });
+        ScrollReveal().reveal('h1, h2, #about p, #photography p', { delay: 200, duration: 800, origin: 'left', distance: '50px', reset: false });
+        ScrollReveal().reveal('#about img', { delay: 400, duration: 800, origin: 'right', distance: '50px', scale: 0.9, reset: false });
+        ScrollReveal().reveal('.gallery-item', { delay: 200, duration: 600, origin: 'bottom', distance: '50px', interval: 50, scale: 0.9, reset: false });
+
+        // --- Modal Closing Logic ---
+        function setupModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            const closeButtons = modal.querySelectorAll('.close-modal-btn');
+            const closeModal = () => {
+                modal.classList.remove('visible');
+                document.body.style.overflow = 'auto';
+            };
+            closeButtons.forEach(btn => btn.addEventListener('click', closeModal));
+            modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+            document.addEventListener('keydown', (e) => { if (e.key === "Escape") closeModal(); });
+            return modal;
+        }
+        
+        // --- Setup All Modals ---
+        const aiModal = setupModal('ai-modal');
+        const photoModal = setupModal('photo-modal');
+        const contactModal = setupModal('contact-modal');
+        
+        // --- Contact Modal Opening Logic ---
+        const contactButtons = [document.getElementById('nav-contact-btn'), document.getElementById('mobile-nav-contact-btn'), document.getElementById('footer-contact-btn')];
+        contactButtons.forEach(btn => {
+            if(btn) {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    contactModal.classList.add('visible');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+        });
+
+
+        // --- Photo Gallery Lightbox ---
+        const photoModalImg = document.getElementById('photo-modal-img');
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const imgSrc = item.querySelector('img').src;
+                photoModalImg.src = imgSrc;
+                photoModal.classList.add('visible');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        // --- Gemini API and Modal Logic ---
+        const aiButtons = document.querySelectorAll('.ai-button');
+        const modalTitle = document.getElementById('modal-title');
+        const modalContent = document.getElementById('modal-content');
+        
+        aiButtons.forEach(button => {
+            button.addEventListener('click', async (e) => {
+                const card = e.target.closest('.card');
+                const cardContentEl = card.querySelector('.card-content');
+                const title = cardContentEl.querySelector('h3').innerText;
+                const company = cardContentEl.querySelector('p:nth-of-type(1)').innerText;
+                const summary = Array.from(cardContentEl.querySelectorAll('li')).map(li => li.innerText).join('; ');
+                const fullDescription = `${title} at ${company}. Key achievements include: ${summary}`;
+                
+                modalTitle.innerText = title;
+                modalContent.innerHTML = '<div class="flex justify-center items-center"><div class="loader"></div></div>';
+                aiModal.classList.add('visible');
+                document.body.style.overflow = 'hidden';
+
+                const prompt = `You are a helpful AI assistant summarizing project details for Siddharth Karmarkar's portfolio. Based on the following information, please elaborate on the work or project. Explain the key contributions, potential technical challenges that might have been overcome, and the business or research impact. Format the response in a clear, professional, and engaging way for a recruiter or hiring manager. Use Markdown for formatting if helpful (e.g., bolding, bullet points), but keep it within 2-3 short paragraphs.\n\nHere is the information:\n\n${fullDescription}`;
+
+                try {
+                    const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+                    const apiKey = ""; // Handled by environment
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                    const result = await response.json();
+                    
+                    if (result.candidates && result.candidates[0]) {
+                        let text = result.candidates[0].content.parts[0].text;
+                        text = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-slate-900">$1</strong>');
+                        text = text.replace(/(\r\n|\n|\r)/gm, '<br><br>');
+                        modalContent.innerHTML = text;
+                    } else { throw new Error("No content received from API."); }
+                } catch (error) {
+                    console.error("Gemini API Error:", error);
+                    modalContent.innerHTML = '<p class="text-red-500">Sorry, the AI assistant is currently unavailable. Please try again later.</p>';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
