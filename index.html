@@ -420,6 +420,10 @@
         const aiModal = setupModal('ai-modal');
         const photoModal = setupModal('photo-modal');
         const contactModal = setupModal('contact-modal');
+
+        // --- Modal Title and Content Elements ---
+        const modalTitle = document.getElementById('modal-title');
+        const modalContent = document.getElementById('modal-content');
         
         // --- Contact Modal Opening Logic ---
         const contactButtons = [document.getElementById('nav-contact-btn'), document.getElementById('mobile-nav-contact-btn'), document.getElementById('footer-contact-btn')];
